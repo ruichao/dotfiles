@@ -1,0 +1,84 @@
+" === plugins ===
+set nocompatible " be iMproved, required by Vundle
+filetype off "required by Vundle
+
+" set the run time path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+    " let Vundle manage Vundle, required by Vundle
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'altercation/vim-colors-solarized'
+
+call vundle#end()
+
+filetype plugin on
+filetype indent on
+
+" === General config ===
+    " set how many lines of history VIM has to remember
+    set history=500
+
+" === User interface ===
+    " set 7 lines to the cursor - when moving vertically using j/k
+    " the number of context lines you would like to see above/below the cursor
+    set scrolloff=7
+    " allow for cursor beyond last character
+    set virtualedit=onemore
+
+    " change terminal's title
+    set title
+    " show line number
+    set number
+    " show matching brackets when text indicator is over them
+    set showmatch
+    " highlight problematic whitespace
+    set list
+    set listchars=tab:>·,trail:•,extends:#,nbsp:.
+    " search config
+    set ignorecase
+    set smartcase
+    " show search result while typing
+    set incsearch
+    " highlight search
+    set hlsearch
+
+    " always show status line
+    set laststatus=2
+    " show command in status line
+    set showcmd
+
+    " highlight current column
+    set cursorcolumn
+    " highlight current line
+    set cursorline
+
+    set background=dark
+    syntax enable
+    colorscheme solarized
+    if has('gui_running')
+      set background=light
+    endif
+
+" === Text, tab and indent ===
+    set expandtab     " use spaces instead of tabs
+    set smarttab
+    set shiftwidth=2
+    set tabstop=2
+    set softtabstop=2
+    set autoindent
+    set smartindent
+
+" === Files, backups and undo ===
+    " turn off backup / swap files
+    set nobackup
+    set noswapfile
+    " prevents automatic write backup
+    set nowritebackup
+    set undodir=~/.vim/undo
+    if has('persistent_undo')
+      set undofile
+      set undolevels=1000
+      set undoreload=1000
+    endif
+
