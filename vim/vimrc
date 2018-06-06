@@ -9,6 +9,16 @@ call vundle#begin()
     " let Vundle manage Vundle, required by Vundle
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'altercation/vim-colors-solarized'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'vim-syntastic/syntastic'
+    Plugin 'jiangmiao/auto-pairs'
+    " comment codes
+    Plugin 'scrooloose/nerdcommenter'
+    " git
+    Plugin 'tpope/vim-fugitive'
+    " search
+    Plugin 'mileszs/ack.vim'
+
 
 call vundle#end()
 
@@ -18,7 +28,59 @@ filetype indent on
 " === General config ===
     " set how many lines of history VIM has to remember
     set history=500
+    " automaticlly enable mouse usage
+    set mouse=a
+    " hide the mouse cursor while typing
+    set mousehide
+    " when select by mouse, default copy to clipboard
+    set go+=a
+    " mapleader
+    let mapleader=","
+    let g:mapleader=","
+    " backspace
+    set backspace=indent,eol,start
 
+" === Encoding ===
+    if has("multi_byte")
+        "set fileencoding priority
+        if getfsize(expand("%")) > 0
+            set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,latain1
+        else
+            set fileencodings=cp936,big5,euc-jp,euc-kr,latain1
+        endif
+
+        "CJK environment detection and corresponding setting
+        if v:lang =~ "^zh_CN"
+            "Use cp936 to support GBK, euc-cn == gb2312
+            set encoding=cp936
+            set termencoding=cp936
+            set fileencoding=cp936
+        elseif v:lang =~ "^zh_TW"
+            "cp950, big5 or euc-tw
+            set encoding=big5
+            set termencoding=big5
+            set fileencoding=big5
+        elseif v:lang =~ "^ko"
+            set encoding=euc-kr
+            set termencoding=euc-kr
+            set fileencoding=euc-kr
+        elseif v:lang =~ "^ja_JP"
+            set encoding=euc-jp
+            set termencoding=euc-jp
+            set fileencoding=enc-jp
+        endif
+
+        " Detect UTF-8 locale, and replace CJK setting if needed
+        if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+            set encoding=utf-8
+            set termencoding=utf-8
+            set fileencoding=utf-8
+        endif
+    else
+        echoerr "Sorry, this version of (g)vim was not compiled with multi_byte"
+    endif
+
+    " }
 " === User interface ===
     " set 7 lines to the cursor - when moving vertically using j/k
     " the number of context lines you would like to see above/below the cursor
@@ -63,11 +125,20 @@ filetype indent on
 " === Text, tab and indent ===
     set expandtab     " use spaces instead of tabs
     set smarttab
-    set shiftwidth=2
-    set tabstop=2
-    set softtabstop=2
+    set shiftwidth=4
+    set tabstop=4
+    set softtabstop=4
     set autoindent
     set smartindent
+    set foldmethod=indent
+    set foldlevel=9
+
+    " === smart way to move between windows
+    map <C-j> <C-W>j
+    map <C-k> <C-W>k
+    map <C-h> <C-W>h
+    map <C-l> <C-W>l
+
 
 " === Files, backups and undo ===
     " turn off backup / swap files
@@ -81,4 +152,35 @@ filetype indent on
       set undolevels=1000
       set undoreload=1000
     endif
+
+" === Plugin config - Nerdtree===
+    map <leader>n :NERDTreeToggle<CR>
+    map <leader>e :NERDTreeFind<CR>
+    let NERDTreeShowBookmarks=1
+    let NERDTreeChDirMode=0
+    let NERDTreeMouseMode=2
+    let NERDTreeShowHidden=1
+    let NERDTreeKeepTreeInNewTab=1
+    let g:nerdtree_tabs_open_on_gui_startup=0
+    let NERDTreeHighlightCursorline=1
+    let NERDTreeQuitOnOpen=1
+    let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
+    let g:netrw_home='~/bak'
+    "close vim if the only window left open is a NERDTree
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
+
+" === Plugin config - syntastic ===
+let g:syntastic_javascript_checkers=['eslint']
+let g:syntastic_javascript_eslint_exe='npx eslint'
+let g:syntastic_check_on_open=1
+
+
+" === Plugin config - ack.vim ===
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
+" Don't jump to the first result automatically
+cnoreabbrev Ack Ack!
+" use leader + a to open Ack!
+nnoremap <Leader>a :Ack!<Space>
 
