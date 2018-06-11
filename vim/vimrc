@@ -1,26 +1,29 @@
-" === plugins ===
-set nocompatible " be iMproved, required by Vundle
-filetype off "required by Vundle
+" === auto install plug ===
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" set the run time path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
     " let Vundle manage Vundle, required by Vundle
-    Plugin 'VundleVim/Vundle.vim'
-    Plugin 'altercation/vim-colors-solarized'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'vim-syntastic/syntastic'
-    Plugin 'jiangmiao/auto-pairs'
+    Plug 'junegunn/vim-plug'
+    " status line
+    Plug 'vim-airline/vim-airline'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'scrooloose/nerdtree'
+    Plug 'vim-syntastic/syntastic'
+    Plug 'jiangmiao/auto-pairs'
     " comment codes
-    Plugin 'scrooloose/nerdcommenter'
+    Plug 'scrooloose/nerdcommenter'
     " git
-    Plugin 'tpope/vim-fugitive'
+    Plug 'tpope/vim-fugitive'
     " search
-    Plugin 'mileszs/ack.vim'
+    Plug 'mileszs/ack.vim'
 
 
-call vundle#end()
+call plug#end()
 
 filetype plugin on
 filetype indent on
@@ -39,6 +42,16 @@ filetype indent on
     let g:mapleader=","
     " backspace
     set backspace=indent,eol,start
+    " font
+    if has("gui_running")
+      if has("gui_gtk2")
+        set guifont=Inconsolata\ 12
+      elseif has("gui_macvim")
+        set guifont=Menlo\ Regular:h14
+      elseif has("gui_win32")
+        set guifont=Consolas:h11:cANSI
+      endif
+    endif
 
 " === Encoding ===
     if has("multi_byte")
